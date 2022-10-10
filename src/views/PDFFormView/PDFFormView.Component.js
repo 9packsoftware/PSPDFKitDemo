@@ -6,7 +6,6 @@ import React from 'react'
  } from 'react-native';
  import { containerStyle, saveButtonStyle, pdfViewStyle } from './PDFFormView.style'
  import { PDFFormViewServices, FORM_PATH_IN_DOCUMENTS } from './PDFFormView.Services.js';
-
  import PSPDFKitView from 'react-native-pspdfkit';
  
  const configuration = {
