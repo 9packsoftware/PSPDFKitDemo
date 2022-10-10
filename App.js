@@ -17,18 +17,18 @@ import RNFS from "react-native-fs";
 
 const BASE_FILE_NAME = "work-order-form"
 const FORM_TEMPLATE_FILE_NAME = `${BASE_FILE_NAME}.pdf`
-const FORM_TEMPLATE_PATH = Platform.OS === 'ios' ? FORM_TEMPLATE_FILE_NAME : `file:///android_asset/${FORM_TEMPLATE_FILE_NAME}`;
 const DOCUMENT_FILE_NAME = `${BASE_FILE_NAME}-filled.pdf`
+const FORM_PATH_IN_DOCUMENTS = RNFS.DocumentDirectoryPath + FORM_TEMPLATE_FILE_NAME;
+const DOCUMENT_PATH_IN_DOCUMENTS = RNFS.DocumentDirectoryPath + DOCUMENT_FILE_NAME;
 
 const onSaveButtonClick = (self, event) => {
-  const path = RNFS.DocumentDirectoryPath + DOCUMENT_FILE_NAME;
-  console.log(path)
+  console.log(DOCUMENT_PATH_IN_DOCUMENTS)
 
 }
 
 const copyFormToDocuments = async () => {
-  const response = await RNFS.readFileAssets(FORM_TEMPLATE_FILE_NAME, "base64");
-
+  //REMARKS:  FORM_TEMPLATE_FILE_NAME == `file:///android_asset/${FORM_TEMPLATE_FILE_NAME}`;
+  await RNFS.copyFileAssets(FORM_TEMPLATE_FILE_NAME, FORM_PATH_IN_DOCUMENTS);  
 };
 
 const configuration = {
@@ -64,7 +64,7 @@ export class App extends React.Component {
           <Button style={saveButtonStyle} title='Save' onPress={onSaveButtonClickProxy} />
           <PSPDFKitView
             ref="pdfView"
-            document={FORM_TEMPLATE_PATH}
+            document={FORM_PATH_IN_DOCUMENTS}
             configuration={configuration}
             fragmentTag="PDF1"
             style={pdfViewStyle}
