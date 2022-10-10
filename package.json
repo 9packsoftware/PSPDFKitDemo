@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "react": "18.1.0",
-    "react-native": "0.70.2",    
+    "react-native": "0.70.2",
+    "react-native-fs": "^2.20.0",
     "react-native-pspdfkit": "github:PSPDFKit/react-native"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 package com.pspdfkitdemo;
-
+import com.rnfs.RNFSPackage; // <------- add package
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
@@ -12,8 +12,12 @@ import com.facebook.soloader.SoLoader;
 import com.pspdfkitdemo.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import com.facebook.react.shell.MainReactPackage;
 
 public class MainApplication extends Application implements ReactApplication {
+
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
@@ -88,4 +92,6 @@ public class MainApplication extends Application implements ReactApplication {
       }
     }
   }
+
+  
 }
