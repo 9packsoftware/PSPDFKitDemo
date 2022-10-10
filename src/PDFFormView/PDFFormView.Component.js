@@ -24,13 +24,11 @@ import React from 'react'
      };
    }
  
-   componentDidMount() {
-    (async () =>
+   componentDidMount = () =>(async () =>
         await PDFFormViewServices.loadFormTemplate(this)
     )()
-   }
- 
-   render() {
+   
+   render = () => {
      const self = this;
      const onSaveButtonClickProxy = (event) => PDFFormViewServices.onSaveFormRequest(self);
      const templateLoaded = this.state.templateLoaded
