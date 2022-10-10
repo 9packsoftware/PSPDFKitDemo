@@ -16,7 +16,7 @@ import React from 'react'
    disableAutomaticSaving: true
  };
  
- export class PDFFormViewComponent extends React.Component {
+ export class PDFFormView extends React.Component {
    constructor(props) {
      super(props)
      this.state = {
