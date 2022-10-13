@@ -14,32 +14,27 @@ if (!fs.existsSync(documentsFolder)) {
 // default options
 app.use(fileUpload());
 
-app.post('/documents', function(req, res) {
+app.post('/documents', async (req, res) => {
     if (!req.files) {
         return res.status(400).send("No files were uploaded.");
     }
 
     // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
     const fileKeys = Object.keys(req.files);
-    const fileObject = req.files[fileKeys[0]];
+    const pdfFleObject = req.files[fileKeys[1]];
+    const jsonFleObject = req.files[fileKeys[0]];
     const uuid = uuidv4();
     const pdfFileName = `${uuid}.pdf`
     const jsonFileName = `${uuid}.json`
     const pdfPath = [documentsFolder, pdfFileName].join(path.sep);
     const jsonPath = [documentsFolder, jsonFileName].join(path.sep);
 
-    console.log(pdfPath)
-    fileObject.mv(pdfPath, function (err) {
-        if (err) {
-            return res.status(500).send(err);
-        }
+    
 
-        fs.writeFileSync(jsonPath, JSON.stringify({
-            timeStamp: new Date()            
-        }));
+    await pdfFleObject.mv(pdfPath);
+    await jsonFleObject.mv(jsonPath);
 
-        return res.send('File uploaded!');
-    });
+    return res.send('File uploaded!');
 });
 
 //start app 
