@@ -31,7 +31,6 @@ app.post('/documents', function(req, res) {
     console.log(pdfPath)
     fileObject.mv(pdfPath, function (err) {
         if (err) {
-            console.log(err)
             return res.status(500).send(err);
         }
 

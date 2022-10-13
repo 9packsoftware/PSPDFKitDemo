@@ -1,3 +1,4 @@
+import RNFS from "react-native-fs";
 export const FileIOServices = {
     
     uploadFile: async (url, filepath, filename, filetype) => {      
