@@ -3,13 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
+    "android": "npx react-native run-android",
+    "ios": "npx react-native run-ios",
+    "start": "npx react-native start",
     "test": "jest",
     "lint": "eslint ."
   },
   "dependencies": {
+    "axios": "^0.25.0",
     "react": "18.1.0",
     "react-native": "0.70.2",
     "react-native-dotenv": "^3.3.1",

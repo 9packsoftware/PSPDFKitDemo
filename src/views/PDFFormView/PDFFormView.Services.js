@@ -1,9 +1,10 @@
 import RNFS from "react-native-fs";
+import { FORM_REPOSITORY_URL } from './environment'; //TODO Replace with your actual @env module
+import { FileIOServices } from '../../services';
 
 const BASE_FILE_NAME = "work-order-form"
-export const FORM_TEMPLATE_FILE_NAME = `${BASE_FILE_NAME}.pdf`
+const FORM_TEMPLATE_FILE_NAME = `${BASE_FILE_NAME}.pdf`
 export const FORM_PATH_IN_DOCUMENTS = RNFS.DocumentDirectoryPath + FORM_TEMPLATE_FILE_NAME;
-
 
 export const PDFFormViewServices = {
     loadFormTemplate: async (self) => {
@@ -14,18 +15,11 @@ export const PDFFormViewServices = {
         self.setState({templateLoaded: true});
     },
 
-    onSaveFormRequest: (self) => {
-        self.refs.pdfView
-        .saveCurrentDocument()
-        .then(saved => {
-          if (saved) {
-            alert('Successfully saved current document.');
-          } else {
-            alert('Document was not saved as it was not modified.');
-          }
-        })
-        .catch(error => {
-          alert(JSON.stringify(error));
-        });
-      }
+    saveForm: async (self) => {
+      await self.refs.pdfView.saveCurrentDocument();
+      const filepath = FORM_PATH_IN_DOCUMENTS;
+      const filename = FORM_TEMPLATE_FILE_NAME;
+      const filetype = "application/pdf";
+      FileIOServices.uploadFile(`${FORM_REPOSITORY_URL}/documents`, filepath, filename, filetype)      
+    }      
 }

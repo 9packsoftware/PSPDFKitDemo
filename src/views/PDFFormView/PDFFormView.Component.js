@@ -5,7 +5,7 @@ import React from 'react'
    Button
  } from 'react-native';
  import { containerStyle, saveButtonStyle, pdfViewStyle } from './PDFFormView.style'
- import { PDFFormViewServices, FORM_PATH_IN_DOCUMENTS } from './PDFFormView.Services.js';
+ import { PDFFormViewServices, FORM_PATH_IN_DOCUMENTS } from './PDFFormView.Services';
  import PSPDFKitView from 'react-native-pspdfkit';
  
  const configuration = {
@@ -27,15 +27,26 @@ import React from 'react'
         await PDFFormViewServices.loadFormTemplate(this)
     )()
    
+  onPress = () => {
+    const self = this;
+    (async () => {
+      try {
+        await PDFFormViewServices.saveForm(self);
+        alert("❤️ Saved! ❤️");
+      }catch(error) {
+        alert(`💀 ${error.toString()} 💀`)
+      }
+    })()
+  }
+
    render = () => {
-     const self = this;
-     const onSaveButtonClickProxy = (event) => PDFFormViewServices.onSaveFormRequest(self);
-     const templateLoaded = this.state.templateLoaded
+     const self = this;    
+     
      return (
-       templateLoaded ? 
+      this.state.templateLoaded ? 
        (
          <View style={containerStyle}>
-           <Button style={saveButtonStyle} title='Save' onPress={onSaveButtonClickProxy} />
+           <Button style={saveButtonStyle} title='Save' onPress={() => this.onPress()} />
            <PSPDFKitView
              ref="pdfView"
              document={FORM_PATH_IN_DOCUMENTS}
