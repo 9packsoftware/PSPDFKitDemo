@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fileUpload = require('express-fileupload');
@@ -16,7 +17,7 @@ if (!fs.existsSync(documentsFolder)) {
 
 // default options
 app.use(fileUpload());
-
+app.use(cors());
 app.post('/documents', async (req, res) => {
     if (!req.files) {
         return res.status(400).send("No files were uploaded.");
@@ -71,6 +72,19 @@ app.get('/document/:documentId', async (req, res) => {
 
     res.setHeader('Content-Length', stat.size);    
     res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename=${documentId}`);
+    file.pipe(res);
+    
+});
+
+app.get('/meta/:documentId', async (req, res) => {
+    const documentId = req.params.documentId;
+    const pdfFileSearch = `${documentsFolder}/${documentId}`.replace(".pdf", ".json");
+    const file = fs.createReadStream(pdfFileSearch);
+    const stat = fs.statSync(pdfFileSearch);
+
+    res.setHeader('Content-Length', stat.size);    
+    res.setHeader('Content-Type', 'application/json');
     res.setHeader('Content-Disposition', `inline; filename=${documentId}`);
     file.pipe(res);
     
