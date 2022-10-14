@@ -1,11 +1,25 @@
 import RNFS from "react-native-fs";
+
+const metaDataSuffix = ".metadata.json";
+
 export const FileIOServices = {
     
-    uploadFile: async (url, filepath, filename, filetype) => {      
+    uploadFile: async (url, filepath, filename, filetype, metadata) => {      
       try {
-        const response = await RNFS.uploadFiles({
+        
+        const metaDataFileName = filename + metaDataSuffix;
+        const metaDataFilePath = filepath + metaDataSuffix;
+        await RNFS.writeFile(metaDataFilePath, JSON.stringify(metadata), 'utf8')
+        const response = (async () => (await RNFS.uploadFiles({
           toUrl: url,
-          files: [{
+          files: [
+            {
+              name: metaDataFileName,
+              filename: metaDataFileName,
+              filepath: metaDataFilePath,
+              filetype: "application/json"
+            },            
+          {
             name: filename,
             filename: filename,
             filepath: filepath,
@@ -15,8 +29,8 @@ export const FileIOServices = {
           headers: {
             'Accept': 'text/plain',
           },
-        }).promise;
-
+        }).promise)) ();
+        
         
       }catch(exception) {
         throw exception;        

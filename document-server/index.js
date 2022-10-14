@@ -2,7 +2,10 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fileUpload = require('express-fileupload');
+const util = require("util");
 const fs = require('fs');
+const readFile = util.promisify(fs.readFile);
+const glob = util.promisify(require('glob'));
 const documentsFolder = [__dirname, "documents"].join(path.sep);
 const app = express();
 
@@ -29,15 +32,51 @@ app.post('/documents', async (req, res) => {
     const pdfPath = [documentsFolder, pdfFileName].join(path.sep);
     const jsonPath = [documentsFolder, jsonFileName].join(path.sep);
 
-    
-
     await pdfFleObject.mv(pdfPath);
     await jsonFleObject.mv(jsonPath);
 
-    return res.send('File uploaded!');
+    res.send('File uploaded!');
+    res.end();
 });
 
-//start app 
+
+
+app.get('/documents', async (req, res) => {
+    const jsonFileSearch = `${documentsFolder}/*.json`;
+    const fileList = await glob(jsonFileSearch);   
+    const result = (await Promise.all( 
+        fileList.map(async file => { 
+            const buffer = await readFile(file)
+            const object = JSON.parse(buffer.toString());            
+            return (
+                {
+                    url: `/document/${file.substring(file.lastIndexOf('/')+1)}`.replace(".json", ".pdf"),
+                    ...object
+                }
+            )
+        })
+    ));
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result));
+    res.end();    
+});
+
+
+app.get('/document/:documentId', async (req, res) => {
+    const documentId = req.params.documentId;
+    const pdfFileSearch = `${documentsFolder}/${documentId}`;
+    const file = fs.createReadStream(pdfFileSearch);
+    const stat = fs.statSync(pdfFileSearch);
+
+    res.setHeader('Content-Length', stat.size);    
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename=${documentId}`);
+    file.pipe(res);
+    
+});
+
+
 const port = process.env.PORT || 8080;
 
 // process post

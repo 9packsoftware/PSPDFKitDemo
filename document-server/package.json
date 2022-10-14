@@ -14,8 +14,11 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
+    "glob": "^8.0.3",
+    "glob-promise": "^5.0.0",
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
+    "promisify": "^0.0.3",
     "uuid": "^9.0.0"
   }
 }
